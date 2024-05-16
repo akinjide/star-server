@@ -1,0 +1,20 @@
+{
+  "defaultEnv": {"ENV": "NODE_ENV"},
+  "local": {
+    "driver": "pg",
+    "host": "127.0.0.1",
+    "user": "root",
+    "database": "star",
+    "password": "root",
+    "port": "5432",
+    "multipleStatements": true
+  },
+  "production": {
+    "driver": "pg",
+    "host": {"ENV": "DB_HOST"},
+    "user": {"ENV": "DB_USER"},
+    "password": {"ENV": "DB_PASS"},
+    "database": {"ENV": "DB_NAME"},
+    "multipleStatements": true
+  }
+}

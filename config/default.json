@@ -1,0 +1,8 @@
+{
+    "host": "localhost",
+    "port": 3000,
+    "postgresql": {
+        "client": "pg",
+        "connection": "postgres://postgres:@localhost:5432/star"
+    }
+}
