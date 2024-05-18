@@ -1,8 +1,10 @@
 CREATE TABLE teams (
-    id
-    name
-    description
-    image
-    created_at
-    updated_at
+    id INT GENERATED ALWAYS AS IDENTITY,
+    name VARCHAR(100) NOT NULL,
+    description VARCHAR(200),
+    image TEXT,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL,
+
+    PRIMARY KEY(id)
 );
