@@ -8,5 +8,5 @@ CREATE TABLE reports (
     added_at TIMESTAMP NOT NULL,
 
     PRIMARY KEY(id),
-    CONSTRAINT fk_projects FOREIGN_KEY(project_id) REFERENCES projects(project_id) ON DELETE CASCADE,
+    CONSTRAINT fk_projects FOREIGN KEY(project_id) REFERENCES projects(id) ON DELETE CASCADE
 );

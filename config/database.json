@@ -3,9 +3,9 @@
   "local": {
     "driver": "pg",
     "host": "127.0.0.1",
-    "user": "root",
+    "user": "postgres",
     "database": "star",
-    "password": "root",
+    "password": "",
     "port": "5432",
     "multipleStatements": true
   },

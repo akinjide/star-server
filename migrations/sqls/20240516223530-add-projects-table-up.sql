@@ -13,8 +13,8 @@ CREATE TABLE projects (
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL,
 
-    PRIMARY KEY(id, team_id),
-    CONSTRAINT fk_teams FOREIGN_KEY(team_id) REFERENCES teams(team_id) ON DELETE CASCADE,
-    CONSTRAINT fk_topics FOREIGN_KEY(topic_id) REFERENCES topics(topic_id),
-    CONSTRAINT fk_users FOREIGN_KEY(supervisor_id) REFERENCES users(supervisor_id)
+    PRIMARY KEY(id),
+    CONSTRAINT fk_teams FOREIGN KEY(team_id) REFERENCES teams(id) ON DELETE CASCADE,
+    CONSTRAINT fk_topics FOREIGN KEY(topic_id) REFERENCES topics(id),
+    CONSTRAINT fk_users FOREIGN KEY(supervisor_id) REFERENCES users(id)
 );

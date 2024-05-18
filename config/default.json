@@ -3,6 +3,9 @@
     "port": 3000,
     "postgresql": {
         "client": "pg",
+        "poolSizeMax": 10,
+        "idleTimeoutMs": 60000,
+        "connTimeoutMs": 60000,
         "connection": "postgres://postgres:@localhost:5432/star"
     }
 }

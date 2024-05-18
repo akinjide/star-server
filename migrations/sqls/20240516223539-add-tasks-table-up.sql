@@ -4,7 +4,7 @@ CREATE TABLE tasks (
     user_id INT NOT NULL,
     team_id INT NOT NULL,
     name VARCHAR(100) NOT NULL,
-    description  VARCHAR(150),
+    description  VARCHAR(400),
     raw_text TEXT,
     grade SMALLINT,
     assigned_at TIMESTAMP,
@@ -14,7 +14,7 @@ CREATE TABLE tasks (
     updated_at TIMESTAMP NOT NULL,
 
     PRIMARY KEY(id),
-    CONSTRAINT fk_projects FOREIGN_KEY(project_id) REFERENCES projects(project_id) ON DELETE CASCADE,
-    CONSTRAINT fk_users FOREIGN_KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE,
-    CONSTRAINT fk_teams FOREIGN_KEY(team_id) REFERENCES teams(team_id)
+    CONSTRAINT fk_projects FOREIGN KEY(project_id) REFERENCES projects(id) ON DELETE CASCADE,
+    CONSTRAINT fk_users FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
+    CONSTRAINT fk_teams FOREIGN KEY(team_id) REFERENCES teams(id)
 );

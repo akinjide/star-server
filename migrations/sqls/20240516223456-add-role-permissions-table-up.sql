@@ -3,6 +3,6 @@ CREATE TABLE role_permissions (
     permission_id INT NOT NULL,
     added_at TIMESTAMP NOT NULL,
 
-    PRIMARY KEY(role_id, permission_id),
-    CONSTRAINT fk_permissions FOREIGN_KEY(permission_id) REFERENCES permissions(id)
+    PRIMARY KEY(role_id),
+    CONSTRAINT fk_permissions FOREIGN KEY(permission_id) REFERENCES permissions(id)
 );
