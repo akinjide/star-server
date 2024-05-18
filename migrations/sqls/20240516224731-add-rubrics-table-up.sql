@@ -4,8 +4,8 @@ CREATE TABLE rubrics (
     section_percentage SMALLINT
     criterion VARCHAR(50) NOT NULL,
     criterion_weight SMALLINT,
-    created_at TIMESTAMP NOT NULL DEFAULT NOW,
-    updated_at TIMESTAMP NOT NULL DEFAULT NOW,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
 
     PRIMARY KEY(id),
 );
@@ -15,8 +15,8 @@ CREATE TABLE rubrics_score (
     rubrics_id INT NOT NULL,
     description VARCHAR(100),
     criterion_score SMALLINT,
-    created_at TIMESTAMP NOT NULL DEFAULT NOW,
-    updated_at TIMESTAMP NOT NULL DEFAULT NOW,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
 
     PRIMARY KEY(id),
     CONSTRAINT fk_rubrics FOREIGN_KEY(rubrics_id) REFERENCES rubrics(rubrics_id)
@@ -28,6 +28,7 @@ VALUES  (1, 'Report', 40, 'Organization And Format (Whole Report)', 1),
         (2, 'Report', 40, 'Proper Citations (Whole Report)', 1),
         (3, 'Report', 40, 'Writing and English Quality (Whole Report)', 3),
         (4, 'Report', 40, 'Size Of the Report (Whole Report)', 1),
+        (5, 'Report', 40, 'Motivation For the Project (Chapter 1 – Introduction)', 3),
 
 
         (17, 'Cooperation with the supervisor', 10, 'Frequency of interaction with the instructor', 3),
@@ -55,4 +56,9 @@ VALUES  (1, 1, 'Report follows the format specified for CMSE projects exactly', 
         (13, 4, '>30 pages', 4),
         (14, 4, '20-29 pages', 3),
         (15, 4, '10-19 pages', 2),
-        (16, 4, '<10 pages', 1);
+        (16, 4, '<10 pages', 1),
+
+        (17, 5, 'The motivation for the project, general background for the project, why it is needed are explained well.', 4),
+        (18, 5, 'The motivation for the project, general background for the project, why it is needed are explained but some important aspects are left out.', 3),
+        (19, 5, 'The motivation for the project, general background for the project, why it is needed are explained poorly.', 2),
+        (20, 5, 'The motivation for the project, general background for the project, why it is needed are not explained at all.', 1),
