@@ -10,8 +10,8 @@ CREATE TABLE tasks (
     assigned_at TIMESTAMP,
     ends_at TIMESTAMP,
     submitted_at TIMESTAMP,
-    created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
 
     PRIMARY KEY(id),
     CONSTRAINT fk_projects FOREIGN KEY(project_id) REFERENCES projects(id) ON DELETE CASCADE,

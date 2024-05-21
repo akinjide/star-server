@@ -8,8 +8,8 @@ CREATE TABLE users (
     full_name VARCHAR(50) NOT NULL,
     title VARCHAR(20),
     student_number INT NOT NULL,
-    created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
 
     PRIMARY KEY(id),
     CONSTRAINT fk_role_permissions FOREIGN KEY(role_id) REFERENCES role_permissions(role_id)

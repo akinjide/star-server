@@ -3,8 +3,8 @@ CREATE TABLE teams (
     name VARCHAR(100) NOT NULL,
     description VARCHAR(400),
     image TEXT,
-    created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
 
     PRIMARY KEY(id)
 );

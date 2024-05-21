@@ -10,8 +10,8 @@ CREATE TABLE projects (
     started_at TIMESTAMP,
     ends_at TIMESTAMP,
     submitted_at TIMESTAMP,
-    created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
 
     PRIMARY KEY(id),
     CONSTRAINT fk_teams FOREIGN KEY(team_id) REFERENCES teams(id) ON DELETE CASCADE,

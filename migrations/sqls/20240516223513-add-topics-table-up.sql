@@ -5,8 +5,8 @@ CREATE TABLE topics (
     description VARCHAR(400),
     url TEXT,
     raw_text TEXT,
-    created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
 
     PRIMARY KEY(id),
     CONSTRAINT fk_users FOREIGN KEY(supervisor_id) REFERENCES users(id) ON DELETE CASCADE

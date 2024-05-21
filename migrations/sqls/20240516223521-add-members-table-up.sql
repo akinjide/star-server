@@ -3,7 +3,7 @@ CREATE TABLE members (
     team_id INT NOT NULL,
     member_id INT NOT NULL,
     is_lead BOOLEAN DEFAULT TRUE,
-    added_at TIMESTAMP NOT NULL,
+    added_at TIMESTAMP NOT NULL DEFAULT NOW(),
 
     PRIMARY KEY(id),
     CONSTRAINT fk_teams FOREIGN KEY(team_id) REFERENCES teams(id) ON DELETE CASCADE,
