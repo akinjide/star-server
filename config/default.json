@@ -7,5 +7,14 @@
         "idleTimeoutMs": 60000,
         "connTimeoutMs": 60000,
         "connection": "postgres://postgres:@localhost:5432/star"
+    },
+    "jwks": {
+        "keyId": "B036D5D0-9F91-44DF-9454-20839D8E3B29",
+        "keyValue": "MTQ4NDU5RTYtMURFRS00MzIMTQ4NDU5RTYtMURFRS00MzIxLUE4QjMtQjE4ODJEQUFFMzIwCgxLUE4QjMtQjE4ODJEQUFFMzIwCg==",
+        "ttl": 1200
+    },
+    "jwt": {
+        "audience": "*.localhost",
+        "issuer": "star-server.localhost"
     }
 }
