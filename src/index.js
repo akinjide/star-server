@@ -9,16 +9,21 @@ process.on('unhandledRejection', (reason) => {
 // Handle 404
 app.use((req, res, next) => {
     next({
-        message: http.STATUS_CODES[404],
-        error: `${req.url}: Not Found`,
+        errorCode: 404,
+        errorMessage: `${req.url}: Not Found`,
     })
 });
 
 // Handle 5XX
 app.use((err, req, res, next) => {
     if (err) {
-        logger.debug(err, { req: req })
-        return res.json(err)
+        logger.error(err, { req: req })
+
+        if (err.errorCode) {
+            return res.status(err.errorCode).json(err)
+        }
+
+        return res.status(500).json(err)
     }
 
     res.status(503).json({

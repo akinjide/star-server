@@ -5,6 +5,7 @@ const passportLocal = require('passport-local')
 const passportJWT = require('passport-jwt')
 const query = require('../query')
 const logger = require('../logger')
+const { comparePassword, decode, getActiveKey } = require('./token')
 
 const local = () => {
     const LocalStrategy = passportLocal.Strategy
@@ -132,13 +133,6 @@ const jwt = () => {
                     id,
                     email
                 }] = b.rows
-
-                if (!t.last_logout || moment(t.last_logout).isBefore(moment(last_logout))) {
-                    return done({
-                        errorCode: 401,
-                        errorMessage: 'invalid or expired token',
-                    }, false)
-                }
 
                 return done(null, {
                     first_name,
