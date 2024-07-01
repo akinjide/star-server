@@ -4,9 +4,10 @@ const query = require('../query')
 const logger = require('../logger')
 const { isAuthorized, isAuthenticated } = require('../hooks/policy')
 const { encryptPassword, create } = require('../hooks/token')
+const userValidation = require('../hooks/validation/users')
 
 module.exports = (app, options) => {
-    app.post('/auth/login', passport.authenticate('local', options.passport), (req, res) => {
+    app.post('/auth/login', userValidation.login, passport.authenticate('local', options.passport), (req, res) => {
         return res.json({ ...req.user, token: create(req.user) })
     })
 
@@ -58,13 +59,8 @@ module.exports = (app, options) => {
 
     app.get('/users/:user_id', isAuthenticated(options), isAuthorized, (req, res) => {
         const { user_id } = req.params
-        const sql = `
-            SELECT *
-            FROM users
-            WHERE id = $1
-        `
 
-        app.pg.query(sql, [user_id], (err, b) => {
+        app.pg.query(query.auth.findOne, [user_id], (err, b) => {
             if (err) {
                 logger.error(err, { req: req })
                 return res.status(500).json({
@@ -83,13 +79,8 @@ module.exports = (app, options) => {
 
     app.delete('/users/:user_id', isAuthenticated(options), isAuthorized, (req, res) => {
         const { user_id } = req.params
-        const sql = `
-            SELECT *
-            FROM users
-            WHERE id = $1
-        `
 
-        app.pg.query(sql, [user_id], (err, b) => {
+        app.pg.query(query.auth.findOne, [user_id], (err, b) => {
             if (err) {
                 logger.error(err, { req: req })
                 return res.status(500).json({
@@ -99,12 +90,7 @@ module.exports = (app, options) => {
             }
 
             if (b.rows && b.rows[0]) {
-                const sql = `
-                    DELETE FROM users
-                    WHERE id = $1
-                `
-
-                return app.pg.query(sql, [user_id], (err) => {
+                return app.pg.query(query.auth.deleteOne, [user_id], (err) => {
                     if (err) {
                         logger.error(err, { req: req })
                         return res.status(500).json({

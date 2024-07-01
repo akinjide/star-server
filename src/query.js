@@ -1,5 +1,5 @@
 module.exports = {
-    // account.js
+    // users.js
     auth: {
         find: `
             SELECT
@@ -22,6 +22,15 @@ module.exports = {
                 role_id
             ) VALUES($1, $2, $3, $4, $5, $6, $7, $8)
             RETURNING *;
+        `,
+        findOne: `
+            SELECT *
+            FROM users
+            WHERE id = $1;
+        `,
+        deleteOne: `
+            DELETE FROM users
+            WHERE id = $1;
         `,
     }
 }
