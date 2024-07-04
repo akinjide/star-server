@@ -142,3 +142,68 @@ VALUES  (1, 1, 'Report follows the format specified for CMSE projects exactly', 
         (63, 16, 'Report leaves out one of appendices A or B.', 2),
         (64, 16, 'Report has no appendices', 1);
 
+        (65, 17, 'Student visited his supervisor 8 or more times ', 4),
+        (66, 17, 'Student visited his supervisor 6-7 times ', 3),
+        (67, 17, 'Student visited his supervisor 4-5 times ', 2),
+        (68, 17, 'Student visited his supervisor less than 4 times', 1),
+
+        (69, 18, 'Student presented 4 or more progress reports', 4),
+        (70, 18, 'Student presented 3 progress reports', 3),
+        (71, 18, 'Student presented 2 progress reports', 2),
+        (72, 18, 'Student presented one or no progress report', 1),
+
+        (73, 19, 'Project was developed with full supervisor involvement at each step.', 4),
+        (74, 19, 'Project developed with supervisor involvement only at major milestones.', 3),
+        (75, 19, 'Project developed with minimal supervisor involvement.', 2),
+        (76, 19, 'Project developed with no supervisor involvement except the initial determination of the project topic.', 1),
+
+        (77, 20, 'The project was designed/implemented by a team of people from different disciplines and included at least one person outside of engineering', 4),
+        (78, 20, 'Project was designed/implemented by at least one computer/software engineer and a person from another engineering field', 3),
+        (79, 20, 'Project was designed/implemented by at least one software engineer and one computer engineer', 2),
+        (80, 20, 'Project was designed/implemented by person(s) from the computer/software engineering discipline (only one discipline involved)', 1),
+
+        (81, 21, 'Project contains many new and innovative ideas.', 4),
+        (82, 21, 'Project contains some new and innovative ideas.', 3),
+        (83, 21, 'Project contains few new and innovative ideas.', 2),
+        (84, 21, 'Project contains no new ideas and innovative ideas.', 1),
+
+        (85, 22, 'Project has a solid, robust implementation. It is designed and implemented using well-established engineering principles, and can handle all conceivable error conditions.', 4),
+        (86, 22, 'Project has an acceptable implementation that works under normal circumstances but cannot handle all error conditions.', 3),
+        (87, 22, 'Project has an acceptable implementation that works under normal circumstances but cannot handle most error conditions.', 2),
+        (88, 22, 'Project has a shaky implementation that hardly works correctly. ', 1),
+
+        (89, 23, 'State of the art engineering tools and techniques have been used in the design and implementation of the project (languages, frameworks, hardware etc.)', 4),
+        (90, 23, 'Current, widely used engineering tools and techniques have been used in the design and implementation of the project. ', 3),
+        (91, 23, 'Engineering tools and techniques that are still used but have been superseded by more up-to-date ones and are about to be retired have been used in the design and implementation of the project.', 2),
+        (92, 23, 'Outdated, no longer current engineering tools and techniques have been used in the design and implementation of the project.', 1),
+
+        (93, 24, 'Project solves a real/significant problem and can be used without modification.', 4),
+        (94, 24, 'Project solves a simplified version of a real/significant problem but can easily be extended to solve the real-life problem.', 3),
+        (95, 24, 'Project solves a vastly simplified version of a real/significant problem and requires major modification before it can be used to solve the real-life problem.', 2),
+        (96, 24, 'Project solves a toy problem, without any real-life application.', 1),
+
+        (97, 25, 'The topic was introduced clearly and creatively. Focus was maintained on the topic and the contribution was highlighted. The conclusion was logical, effective, and relevant.', 4),
+        (98, 25, 'The topic was introduced clearly. Focus was maintained and the contribution was highlighted.The conclusion was satisfactory.', 3),
+        (99, 25, 'The topic was not clearly introduced. The contribution was not obvious. Focus on the topic was not steady. There was a conclusion.', 2),
+        (100, 25, 'The topic was not clearly introduced. Focus was not maintained on the topic. The contribution was not clear. There was no conclusion.', 1),
+
+        (101, 26, 'All parts of the presentation were finished, where each part received enough time relative to its importance.', 4),
+        (102, 26, 'All parts of the presentation were finished, but time allocated to each part was somewhat disproportionate to its significance.', 3),
+        (103, 26, 'All parts of the presentation were finished, but time allocated to each part was largely disproportionate to its significance.', 2),
+        (104, 26, 'Major part of the presentation was not finished.', 1),
+
+        (105, 27, 'Slides were high quality, informative, attractive and contained useful graphics.', 4),
+        (106, 27, 'Slides were of standard quality, and sufficiently informative.', 3),
+        (107, 27, 'Slides were of low quality, and less than fully informative.', 2),
+        (108, 27, 'Slides were totally unattractive and not informative at all.', 1),
+
+        (109, 28, 'The project was presented in an enthusiastic, clearly understandable manner; listener interest in the topic was aroused and maintained.', 4),
+        (110, 28, 'The project was presented in a reasonable way, with some attention being paid to how it was received.', 3),
+        (111, 28, 'The project was presented in a dull and boring way, without any enthusiasm.', 2),
+        (112, 28, 'Presentation was almost incomprehensible and/or uninteresting.', 1),
+
+        (113, 29, 'The student demonstrated extensive knowledge of the topic by responding confidently, precisely and appropriately to all audience questions and feedback.', 4),
+        (114, 29, 'The student demonstrated knowledge of the topic by responding accurately and appropriately to questions and feedback.', 3),
+        (115, 29, 'The student demonstrated some knowledge of the topic by responding accurately and appropriately to questions and feedback.', 2),
+        (116, 29, 'The student demonstrated incomplete knowledge of the topic by responding inaccurately and inappropriately to questions and feedback.', 1);
+
