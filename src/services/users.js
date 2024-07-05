@@ -57,6 +57,26 @@ module.exports = (app, options) => {
         })
     })
 
+    app.get('/users', isAuthenticated(options), isAuthorized, (req, res) => {
+        app.pg.query(query.auth.find, [], (err, b) => {
+            if (err) {
+                logger.error(err, { req: req })
+                return res.status(500).json({
+                    errorCode: 500,
+                    errorMessage: http.STATUS_CODES[500],
+                })
+            }
+
+            if (b.rows && b.rows[0]) {
+                return res.status(200).json(b.rows[0])
+            }
+
+            return res.status(200).json({
+                message: 'no users'
+            })
+        })
+    })
+
     app.get('/users/:user_id', isAuthenticated(options), isAuthorized, (req, res) => {
         const { user_id } = req.params
 
@@ -73,7 +93,9 @@ module.exports = (app, options) => {
                 return res.status(200).json(b.rows[0])
             }
 
-            return res.status(200).json({})
+            return res.status(200).json({
+                message: 'user not found'
+            })
         })
     })
 
@@ -100,7 +122,7 @@ module.exports = (app, options) => {
                     }
 
                     return res.status(200).json({
-
+                        message: 'user deleted'
                     })
                 })
             }
