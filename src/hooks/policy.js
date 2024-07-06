@@ -2,24 +2,33 @@ const http = require('http')
 const passport = require('passport')
 const logger = require('../logger')
 
-const roles = [
-    'administrator',
-    'supervisor',
-    'committee_member',
-    'student'
-]
+const ADMINISTRATOR = 'administrator'
+const SUPERVISOR = 'supervisor'
+const COMMITTEE_MEMBER = 'committee_member'
+const STUDENT = 'student'
 
-const isAuthorized = (req, res, next) => {
-    const { role = 'student' } = req.user || {}
+const roles = {
+    1: ADMINISTRATOR,
+    2: SUPERVISOR,
+    3: COMMITTEE_MEMBER,
+    4: STUDENT
+}
 
-    if (roles.includes(String(role))) {
-        return next()
+const isAuthorized = (guard = []) => {
+    return (req, res, next) => {
+        const { role = STUDENT } = req.user || {}
+
+        if (Object.values(roles).includes(role)) {
+            if (guard.length == 0 || (guard.length > 0 && guard.includes(role))) {
+                return next()
+            }
+        }
+
+        next({
+            errorCode: 401,
+            errorMessage: http.STATUS_CODES[401],
+        })
     }
-
-    next({
-        errorCode: 401,
-        errorMessage: http.STATUS_CODES[401],
-    })
 }
 
 const isAuthenticated = (options) => {
@@ -56,5 +65,6 @@ const isAuthenticated = (options) => {
 
 module.exports = {
     isAuthorized,
-    isAuthenticated
+    isAuthenticated,
+    roles
 }

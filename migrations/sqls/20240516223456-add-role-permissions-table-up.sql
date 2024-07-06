@@ -5,7 +5,7 @@ CREATE TABLE role_permissions (
     added_at TIMESTAMP NOT NULL DEFAULT NOW(),
 
     PRIMARY KEY(role_id),
-    CONSTRAINT fk_permissions FOREIGN KEY(permission_id) REFERENCES permissions(id)
+    CONSTRAINT fk_permissions FOREIGN KEY(permission_id) REFERENCES permissions(id) ON DELETE CASCADE
 );
 
 

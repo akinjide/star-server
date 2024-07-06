@@ -2,16 +2,25 @@ const http = require('http')
 const passport = require('passport')
 const query = require('../query')
 const logger = require('../logger')
-const { isAuthorized, isAuthenticated } = require('../hooks/policy')
+const { isAuthorized, isAuthenticated, roles } = require('../hooks/policy')
 const { encryptPassword, create } = require('../hooks/token')
 const validation = require('../hooks/validation')
 
 module.exports = (app, options) => {
+    const isLessThanTwoAuthorized = isAuthorized([
+        roles[1]
+    ])
+
+    const isLessThanThreeAuthorized = isAuthorized([
+        roles[1],
+        roles[2]
+    ])
+
     app.post('/auth/login', validation.users.login, passport.authenticate('local', options.passport), (req, res) => {
         return res.json({ ...req.user, token: create(req.user) })
     })
 
-    app.post('/auth/create', validation.users.create, (req, res) => {
+    app.post('/auth/create', validation.users.create, isAuthenticated(options), isLessThanTwoAuthorized, (req, res) => {
         const { full_name, title = '', email, passwd, department = '', graduation_year, student_number } = req.body
 
         app.pg.query(query.users.findByEmail, [email], (err, b) => {
@@ -104,7 +113,7 @@ module.exports = (app, options) => {
         })
     })
 
-    app.delete('/users/:user_id', isAuthenticated(options), isAuthorized, (req, res) => {
+    app.delete('/users/:user_id', isAuthenticated(options), isLessThanThreeAuthorized, (req, res) => {
         const { user_id } = req.params
 
         app.pg.query(query.users.findOne, [user_id], (err, b) => {
@@ -133,6 +142,12 @@ module.exports = (app, options) => {
                     })
                 })
             }
+
+            return res.status(200).json({
+                errorCode: -1,
+                errorMessage: null,
+                message: 'user not found'
+            })
         })
     })
 }
