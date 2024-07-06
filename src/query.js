@@ -1,14 +1,14 @@
 module.exports = {
     // users.js
-    auth: {
-        find: `
+    users: {
+        findByEmail: `
             SELECT
-                users.full_name,
-                users.password,
-                users.id,
-                users.email
+                full_name,
+                password,
+                id,
+                email
             FROM users
-            WHERE users.email=$1;
+            WHERE email = $1;
         `,
         create: `
             INSERT INTO users(
@@ -35,6 +35,46 @@ module.exports = {
         deleteOne: `
             DELETE FROM users
             WHERE id = $1;
+        `,
+    },
+
+    // rbac.js
+    permissions: {
+        findOne: `
+            SELECT *
+            FROM permissions
+            WHERE id = $1;
+        `,
+        find: `
+            SELECT *
+            FROM permissions;
+        `,
+        create: `
+            INSERT INTO permissions(
+                description,
+                slug
+            ) VALUES ($1, $2)
+            RETURNING *;
+        `,
+        findBySug: `
+            SELECT *
+            FROM permissions
+            WHERE slug = $1;
+        `
+    },
+    roles: {
+        findOne: `
+            SELECT *
+            FROM role_permissions
+            WHERE role_id = $1 ANd permission_id = $2;
+        `,
+        create: `
+            INSERT INTO role_permissions(
+                role_id,
+                permission_id,
+                role_slug
+            ) VALUES ($1, $2, $3)
+            RETURNING *;
         `,
     }
 }
