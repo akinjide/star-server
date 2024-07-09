@@ -7,7 +7,6 @@ const topics = require('./topics')
 
 const services = (app, options) => {
     users(app, options)
-    groups(app, options)
     projects(app, options)
     rubrics(app, options)
     rbac(app, options)

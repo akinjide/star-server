@@ -42,7 +42,6 @@ const isAuthenticated = (options) => {
                         return next({
                             errorCode: 401,
                             errorMessage: 'invalid auth token',
-
                         })
                     }
 

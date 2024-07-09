@@ -13,7 +13,7 @@ const options = {
         session: false,
         failWithError: true,
     },
-};
+}
 
 function configure(app, options) {
     app.pg = pg
@@ -25,8 +25,8 @@ function configure(app, options) {
     app.use(helmet())
 }
 
-strategy.local();
-strategy.jwt();
+strategy.local()
+strategy.jwt()
 configure(app, options)
 services(app, options)
 

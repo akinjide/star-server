@@ -12,7 +12,7 @@ app.use((req, res, next) => {
         errorCode: 404,
         errorMessage: `${req.url}: Not Found`,
     })
-});
+})
 
 // Handle 5XX
 app.use((err, req, res, next) => {
@@ -30,7 +30,7 @@ app.use((err, req, res, next) => {
         message: http.STATUS_CODES[503],
         error: 'service currently unavailable, try later.',
     })
-});
+})
 
 app.listen('3000', () => {
     logger.info('app listening on http://127.0.0.1:3000')
