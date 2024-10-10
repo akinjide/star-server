@@ -17,7 +17,7 @@ const local = () => {
     }
 
     const strategy = new LocalStrategy(options, (req, email, passwd, done) => {
-        return req.app.pg.query(query.auth.find, [email], (err, b) => {
+        return req.app.pg.query(query.users.findByEmail, [email], (err, b) => {
             if (err) {
                 logger.error(err, { req: req })
                 return done({
@@ -28,9 +28,9 @@ const local = () => {
 
             if (b.rows && b.rows[0]) {
                 const [{
-                    first_name,
-                    last_name,
+                    full_name,
                     password,
+                    role_id,
                     id,
                     email
                 }] = b.rows
@@ -56,8 +56,8 @@ const local = () => {
                     }
 
                     return done(null, {
-                        first_name,
-                        last_name,
+                        full_name,
+                        role_id,
                         id,
                         email
                     })
@@ -117,7 +117,7 @@ const jwt = () => {
     }
 
     const strategy = new JWTStrategy(jwtOptions, (req, t, done) => {
-        req.app.pg.query(query.auth.find, [t.email], (err, b) => {
+        req.app.pg.query(query.users.findByEmail, [t.email], (err, b) => {
             if (err) {
                 logger.error(err, { req: req })
                 return done({
@@ -128,15 +128,15 @@ const jwt = () => {
 
             if (b.rows && b.rows[0]) {
                 const [{
-                    first_name,
-                    last_name,
+                    full_name,
+                    role_id,
                     id,
                     email
                 }] = b.rows
 
                 return done(null, {
-                    first_name,
-                    last_name,
+                    full_name,
+                    role_id,
                     id,
                     email
                 })

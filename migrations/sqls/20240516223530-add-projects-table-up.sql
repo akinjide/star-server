@@ -4,7 +4,7 @@ CREATE TABLE projects (
     topic_id INT NOT NULL,
     supervisor_id INT NOT NULL,
     name VARCHAR(100) NOT NULL,
-    course_code VARCHAR(6) NOT NULL,
+    course_code VARCHAR(8) NOT NULL,
     presentation_at TIMESTAMP,
     description TEXT,
     started_at TIMESTAMP,

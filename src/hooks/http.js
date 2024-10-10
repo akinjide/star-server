@@ -14,11 +14,12 @@ const handleError = (err, req, res, errMessage, errCode = 500) => {
     })
 }
 
-const handleSuccess = (req, res, resMessage, resCode = 200) => {
+const handleSuccess = (req, res, resMessage, data = null, resCode = 200) => {
     return res.status(resCode).json({
         errorCode: -1,
         errorMessage: null,
-        message: resMessage
+        message: resMessage || http.STATUS_CODES[resCode],
+        data: data
     })
 }
 

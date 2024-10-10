@@ -140,7 +140,7 @@ VALUES  (1, 1, 'Report follows the format specified for CMSE projects exactly', 
         (61, 17, 'Report has at least appendices A and B, Appendix A clearly explains the instructions for installing the system, and appendix B contains all the significant code', 4),
         (62, 17, 'Report has at least appendices A and B, Appendix A poorly explains the instructions for installing the system, or appendix B contains only some of the significant code', 3),
         (63, 17, 'Report leaves out one of appendices A or B.', 2),
-        (64, 17, 'Report has no appendices', 1);
+        (64, 17, 'Report has no appendices', 1),
 
         (65, 18, 'Student visited his supervisor 8 or more times ', 4),
         (66, 18, 'Student visited his supervisor 6-7 times ', 3),

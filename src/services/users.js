@@ -28,8 +28,8 @@ module.exports = (app, options) => {
         return res.json({ ...req.user, token: create(req.user) })
     })
 
-    app.post('/auth/create', validation.users.create, isAuthenticated(options), isLessThanTwoAuthorized, (req, res) => {
-        const { full_name, title = '', email, passwd, department = '', graduation_year, student_number } = req.body
+    app.post('/auth/create', isAuthenticated(options), isLessThanTwoAuthorized, (req, res) => {
+        const { full_name, title = '', email, passwd, department = '', graduation_year, student_number, role_id = 1 } = req.body
 
         app.pg.query(query.users.findByEmail, [email], (err, b) => {
             if (err) {
@@ -45,7 +45,7 @@ module.exports = (app, options) => {
                     return handleError(err, req, res)
                 }
 
-                const p = [full_name, title, email, hash, department, graduation_year, student_number, 1]
+                const p = [full_name, title, email, hash, department, graduation_year, student_number, role_id]
 
                 app.pg.query(query.users.create, p, (err, b) => {
                     if (err) {

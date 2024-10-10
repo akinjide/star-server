@@ -4,7 +4,7 @@ const validation = require('./validation')
 module.exports = {
     create: (req, res, next) => {
         const schema = Joi.object().keys({
-            supervisor_id: Joi.string().trim().required(),
+            supervisor_id: Joi.number().integer().positive().min(1).required(),
             name: Joi.string().max(100).trim().required(),
             description: Joi.string().max(400).trim().optional(),
             raw_text: Joi.string().trim().optional(),
@@ -47,7 +47,7 @@ module.exports = {
     },
     delete: (req, res, next) => {
         const schema = Joi.object().keys({
-            supervisor_id: Joi.string().trim().required(),
+            supervisor_id: Joi.number().integer().positive().min(1).required(),
         }).required()
 
         validation(req.body, schema, (err, ok) => {

@@ -109,7 +109,7 @@ module.exports = (app, options) => {
             }
 
             if (b.rows && b.rows[0]) {
-                return app.pg.query(query.topics.delete, [topic_id, supervisor_id], (err, b) => {
+                return app.pg.query(query.topics.delete, [topic_id, supervisor_id], (err) => {
                     if (err) {
                         return handleError(err, req, res)
                     }

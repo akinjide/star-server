@@ -16,10 +16,10 @@ const roles = {
 
 const isAuthorized = (guard = []) => {
     return (req, res, next) => {
-        const { role = STUDENT } = req.user || {}
+        const { role_id = 4 } = req.user || {}
 
-        if (Object.values(roles).includes(role)) {
-            if (guard.length == 0 || (guard.length > 0 && guard.includes(role))) {
+        if (Object.keys(roles).includes(role_id.toString())) {
+            if (guard.length == 0 || (guard.length > 0 && guard.includes(roles[role_id]))) {
                 return next()
             }
         }
