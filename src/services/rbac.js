@@ -1,14 +1,19 @@
 const http = require('http')
 const query = require('../query')
 const logger = require('../logger')
-const { isAuthorized, isAuthenticated, roles } = require('../hooks/policy')
+const {
+    isAuthorized,
+    isAuthenticated,
+    isPermitted,
+    isLessThanTwoAuthorized,
+    isLessThanThreeAuthorized,
+    isEqualAuthorized,
+    roles
+} = require('../hooks/policy')
 const { handleError, handleSuccess } = require('../hooks/http')
 const validation = require('../hooks/validation')
 
 module.exports = (app, options) => {
-    const isLessThanTwoAuthorized = isAuthorized([
-        roles[1]
-    ])
 
     app.get('/roles', isAuthenticated(options), isLessThanTwoAuthorized, (req, res) => {
         return app.pg.query(query.roles.find, [], (err, b) => {

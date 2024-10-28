@@ -31,6 +31,7 @@ const local = () => {
                     full_name,
                     password,
                     role_id,
+                    permissions,
                     id,
                     email
                 }] = b.rows
@@ -58,6 +59,7 @@ const local = () => {
                     return done(null, {
                         full_name,
                         role_id,
+                        permissions,
                         id,
                         email
                     })
@@ -130,6 +132,7 @@ const jwt = () => {
                 const [{
                     full_name,
                     role_id,
+                    permissions,
                     id,
                     email
                 }] = b.rows
@@ -137,6 +140,7 @@ const jwt = () => {
                 return done(null, {
                     full_name,
                     role_id,
+                    permissions,
                     id,
                     email
                 })

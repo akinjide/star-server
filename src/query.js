@@ -6,13 +6,22 @@ module.exports = {
     users: {
         findByEmail: `
             SELECT
-                full_name,
-                password,
-                role_id,
-                id,
-                email
+                users.full_name,
+                users.password,
+                users.role_id,
+                users.id,
+                users.email,
+                ARRAY_AGG(permissions.slug) AS permissions
             FROM users
-            WHERE email = $1;
+            LEFT JOIN role_permissions ON role_permissions.role_id = users.role_id
+            LEFT JOIN permissions ON permissions.id = role_permissions.permission_id
+            WHERE users.email = $1
+            GROUP BY
+                users.full_name,
+                users.password,
+                users.role_id,
+                users.id,
+                users.email;
         `,
         create: `
             INSERT INTO users(
@@ -117,7 +126,7 @@ module.exports = {
         find: `
             SELECT
                 role_permissions.role_id,
-                ARRAY_AGG(permissions.id) permissions,
+                ARRAY_AGG(permissions.id) AS permissions,
             FROM role_permissions
             INNER JOIN permissions ON role_permissions.permission_id = permissions.id
             GROUP_BY role_permissions.role_id;

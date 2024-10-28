@@ -14,9 +14,48 @@ const roles = {
     4: STUDENT
 }
 
+const isPermitted = (pg) => {
+    return (req, res, next) => {
+        const sql = `
+            SELECT
+                role_permissions.role_id,
+                permissions.slug AS permission_slug
+            FROM role_permissions
+            LEFT JOIN permissions ON role_permissions.permission_id = permissions.id
+            WHERE role_permissions.role_id = $1;
+        `
+
+        const { role_id = 0, permissions } = req.user || {}
+
+        return pg.query(sql, [role_id], (err, b) => {
+            if (err) {
+                logger.error(info, { req: req })
+
+                next({
+                    errorCode: 403,
+                    errorMessage: http.STATUS_CODES[403],
+                })
+            }
+
+            for (const row of b.rows) {
+                const { permission_slug } = row
+
+                if (permissions.includes(permission_slug)) {
+                    return next();
+                }
+            }
+
+            next({
+                errorCode: 403,
+                errorMessage: http.STATUS_CODES[403],
+            })
+        })
+    }
+}
+
 const isAuthorized = (guard = []) => {
     return (req, res, next) => {
-        const { role_id = 4 } = req.user || {}
+        const { role_id = 0 } = req.user || {}
 
         if (Object.keys(roles).includes(role_id.toString())) {
             if (guard.length == 0 || (guard.length > 0 && guard.includes(roles[role_id]))) {
@@ -61,9 +100,36 @@ const isAuthenticated = (options) => {
     }
 }
 
+const isLessThanTwoAuthorized = isAuthorized([
+    roles[1]
+])
+
+const isLessThanThreeAuthorized = isAuthorized([
+    roles[1],
+    roles[2]
+])
+
+const isLessThanFourAuthorized = isAuthorized([
+    roles[1],
+    roles[2],
+    roles[3]
+])
+
+const isEqualAuthorized = isAuthorized([
+    roles[1],
+    roles[2],
+    roles[3],
+    roles[4]
+])
 
 module.exports = {
     isAuthorized,
     isAuthenticated,
+    isPermitted,
+
+    isLessThanTwoAuthorized,
+    isLessThanThreeAuthorized,
+    isLessThanFourAuthorized,
+    isEqualAuthorized,
     roles
 }

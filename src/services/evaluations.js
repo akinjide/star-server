@@ -2,7 +2,15 @@ const http = require('http')
 const passport = require('passport')
 const query = require('../query')
 const logger = require('../logger')
-const { isAuthorized, isAuthenticated, roles } = require('../hooks/policy')
+const {
+    isAuthorized,
+    isAuthenticated,
+    isPermitted,
+    isLessThanTwoAuthorized,
+    isLessThanThreeAuthorized,
+    isEqualAuthorized,
+    roles
+} = require('../hooks/policy')
 const { handleError, handleSuccess } = require('../hooks/http')
 const validation = require('../hooks/validation')
 
@@ -55,7 +63,7 @@ module.exports = (app, options) => {
         })
     })
 
-    app.post('/evaluations', (req, res) => {
+    app.post('/evaluations', validation.evaluations.create, (req, res) => {
         const { project_id, evaluator_id, evaluation, originality = -1 } = req.body
         const records = []
 
@@ -122,7 +130,7 @@ module.exports = (app, options) => {
         })
     })
 
-    app.put('/evaluations/:evaluation_id', (req, res) => {
+    app.put('/evaluations/:evaluation_id', validation.evaluations.update, (req, res) => {
 
     })
 

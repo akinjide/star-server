@@ -8,4 +8,8 @@ CREATE TABLE permissions (
 );
 
 INSERT INTO permissions(id, description, slug)
-VALUES  (1, 'Allow user account update', 'update-user');
+VALUES
+    (1, 'Allow user account create', 'account_create'),
+    (2, 'Allow user account delete', 'account_delete'),
+    (3, 'Allow user account create', 'auth_create'),
+    (4, 'Allow user account create', 'auth_create');

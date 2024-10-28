@@ -2,24 +2,20 @@ const http = require('http')
 const passport = require('passport')
 const query = require('../query')
 const logger = require('../logger')
-const { isAuthorized, isAuthenticated, roles } = require('../hooks/policy')
+const {
+    isAuthorized,
+    isAuthenticated,
+    isPermitted,
+    isLessThanTwoAuthorized,
+    isLessThanThreeAuthorized,
+    isEqualAuthorized,
+    roles
+} = require('../hooks/policy')
 const { encryptPassword, create } = require('../hooks/token')
 const { handleError, handleSuccess } = require('../hooks/http')
 const validation = require('../hooks/validation')
 
 module.exports = (app, options) => {
-    const isLessThanThreeAuthorized = isAuthorized([
-        roles[1],
-        roles[2]
-    ])
-
-    const isEqualAuthorized = isAuthorized([
-        roles[1],
-        roles[2],
-        roles[3],
-        roles[4]
-    ])
-
     app.get('/teams', isAuthenticated(options), isEqualAuthorized, (req, res) => {
         return app.pg.query(query.teams.find, [], (err, b) => {
             if (err) {
@@ -72,7 +68,7 @@ module.exports = (app, options) => {
         })
     })
 
-    app.put('/teams/:team_id', (req, res) => {
+    app.put('/teams/:team_id', validation.teams.update, (req, res) => {
         const { team_id } = req.params
 
         return app.pg.query(query.teams.findOne, [team_id], (err, b) => {
@@ -153,7 +149,7 @@ module.exports = (app, options) => {
         })
     })
 
-    app.put('/teams/:team_id/members', isAuthenticated(options), isEqualAuthorized, (req, res) => {
+    app.put('/teams/:team_id/members', validation.teams.updateMember, isAuthenticated(options), isEqualAuthorized, (req, res) => {
         const { team_id } = req.params
 
         return app.pg.query(query.teams.findOne, [team_id], (err, b) => {

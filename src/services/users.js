@@ -2,34 +2,26 @@ const http = require('http')
 const passport = require('passport')
 const query = require('../query')
 const logger = require('../logger')
-const { isAuthorized, isAuthenticated, roles } = require('../hooks/policy')
+const {
+    isAuthorized,
+    isAuthenticated,
+    isPermitted,
+    isLessThanTwoAuthorized,
+    isLessThanThreeAuthorized,
+    isEqualAuthorized,
+    roles
+} = require('../hooks/policy')
 const { encryptPassword, create } = require('../hooks/token')
 const { handleError, handleSuccess } = require('../hooks/http')
 const validation = require('../hooks/validation')
 
 module.exports = (app, options) => {
-    const isLessThanTwoAuthorized = isAuthorized([
-        roles[1]
-    ])
-
-    const isLessThanThreeAuthorized = isAuthorized([
-        roles[1],
-        roles[2]
-    ])
-
-    const isEqualAuthorized = isAuthorized([
-        roles[1],
-        roles[2],
-        roles[3],
-        roles[4]
-    ])
-
     app.post('/auth/login', validation.users.login, passport.authenticate('local', options.passport), (req, res) => {
         return res.json({ ...req.user, token: create(req.user) })
     })
 
-    app.post('/auth/create', isAuthenticated(options), isLessThanTwoAuthorized, (req, res) => {
-        const { full_name, title = '', email, passwd, department = '', graduation_year, student_number, role_id = 1 } = req.body
+    app.post('/auth/create', isAuthenticated(options), isLessThanTwoAuthorized, isPermitted(app.pg), (req, res) => {
+        const { full_name, title = '', email, passwd, department = '', graduation_year = '', student_number = '', role_id = 1 } = req.body
 
         app.pg.query(query.users.findByEmail, [email], (err, b) => {
             if (err) {
@@ -60,7 +52,7 @@ module.exports = (app, options) => {
         })
     })
 
-    app.get('/users', isAuthenticated(options), isEqualAuthorized, (req, res) => {
+    app.get('/users', isAuthenticated(options), isEqualAuthorized, isPermitted(app.pg), (req, res) => {
         app.pg.query(query.users.find, [], (err, b) => {
             if (err) {
                 return handleError(err, req, res)
@@ -74,7 +66,7 @@ module.exports = (app, options) => {
         })
     })
 
-    app.get('/users/:user_id', isAuthenticated(options), isEqualAuthorized, (req, res) => {
+    app.get('/users/:user_id', isAuthenticated(options), isEqualAuthorized, isPermitted(app.pg), (req, res) => {
         const { user_id } = req.params
 
         app.pg.query(query.users.findOne, [user_id], (err, b) => {
@@ -90,7 +82,7 @@ module.exports = (app, options) => {
         })
     })
 
-    app.delete('/users/:user_id', isAuthenticated(options), isLessThanThreeAuthorized, (req, res) => {
+    app.delete('/users/:user_id', isAuthenticated(options), isLessThanThreeAuthorized, isPermitted(app.pg), (req, res) => {
         const { user_id } = req.params
 
         app.pg.query(query.users.findOne, [user_id], (err, b) => {
