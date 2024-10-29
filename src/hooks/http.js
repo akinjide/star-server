@@ -15,6 +15,8 @@ const handleError = (err, req, res, errMessage, errCode = 500) => {
 }
 
 const handleSuccess = (req, res, resMessage, data = null, resCode = 200) => {
+    logger.info(resMessage, { req: req })
+
     return res.status(resCode).json({
         errorCode: -1,
         errorMessage: null,

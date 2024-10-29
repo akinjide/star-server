@@ -29,7 +29,7 @@ const isPermitted = (pg) => {
 
         return pg.query(sql, [role_id], (err, b) => {
             if (err) {
-                logger.error(info, { req: req })
+                logger.error(err, { req: req })
 
                 next({
                     errorCode: 403,

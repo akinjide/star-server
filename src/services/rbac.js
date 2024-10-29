@@ -14,7 +14,6 @@ const { handleError, handleSuccess } = require('../hooks/http')
 const validation = require('../hooks/validation')
 
 module.exports = (app, options) => {
-
     app.get('/roles', isAuthenticated(options), isLessThanTwoAuthorized, (req, res) => {
         return app.pg.query(query.roles.find, [], (err, b) => {
             if (err) {

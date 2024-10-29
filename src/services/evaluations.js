@@ -1,3 +1,5 @@
+// TODO
+
 const http = require('http')
 const passport = require('passport')
 const query = require('../query')
@@ -15,7 +17,7 @@ const { handleError, handleSuccess } = require('../hooks/http')
 const validation = require('../hooks/validation')
 
 module.exports = (app, options) => {
-    app.get('/evaluations/:evaluation_id', (req, res) => {
+    app.get('/evaluations/:evaluation_id', isAuthenticated(options), isLessThanFourAuthorized, (req, res) => {
         const { evaluation_id } = req.params
 
         return app.pg.query(query.evaluations.find, [evaluation_id], (err, b) => {
@@ -31,7 +33,7 @@ module.exports = (app, options) => {
         })
     })
 
-    app.get('/evaluations/evaluator/:evaluator_id', (req, res) => {
+    app.get('/evaluations/evaluator/:evaluator_id', isAuthenticated(options), isLessThanFourAuthorized, (req, res) => {
         const { evaluator_id } = req.params
 
         return app.pg.query(query.evaluations.findByEvaluator, [evaluator_id], (err, b) => {
@@ -47,7 +49,7 @@ module.exports = (app, options) => {
         })
     })
 
-    app.get('/evaluations/projects/:project_id', (req, res) => {
+    app.get('/evaluations/projects/:project_id', isAuthenticated(options), isEqualAuthorized, (req, res) => {
         const { project_id } = req.params
 
         return app.pg.query(query.evaluations.findByProject, [project_id], (err, b) => {
@@ -63,7 +65,7 @@ module.exports = (app, options) => {
         })
     })
 
-    app.post('/evaluations', validation.evaluations.create, (req, res) => {
+    app.post('/evaluations', validation.evaluations.create, isAuthenticated(options), isLessThanFourAuthorized, (req, res) => {
         const { project_id, evaluator_id, evaluation, originality = -1 } = req.body
         const records = []
 
@@ -130,11 +132,11 @@ module.exports = (app, options) => {
         })
     })
 
-    app.put('/evaluations/:evaluation_id', validation.evaluations.update, (req, res) => {
+    app.put('/evaluations/:evaluation_id', validation.evaluations.update, isAuthenticated(options), isLessThanFourAuthorized, (req, res) => {
 
     })
 
-    app.get('/evaluations/projects/:project_id/download', (req, res) => {
+    app.get('/evaluations/projects/:project_id/download', isAuthenticated(options), isEqualAuthorized, (req, res) => {
         const { project_id } = req.params
 
         return app.pg.query(query.evaluations.download, [project_id], (err, b) => {

@@ -16,5 +16,12 @@
     "jwt": {
         "audience": "*.localhost",
         "issuer": "star-server.localhost"
+    },
+    "s3": {
+        "bucket": "",
+        "accessKeyId": "",
+        "secretAccessKey": "",
+        "region": "us-east-1",
+        "expiresInSec": 600
     }
 }

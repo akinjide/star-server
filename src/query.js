@@ -263,6 +263,38 @@ module.exports = {
             INNER JOIN topics ON topics.id = projects.topic_id
             WHERE projects.id = $1;
         `,
+        findTopicWithSupervisor: `
+            SELECT
+                topics.id AS topic_id,
+                topics.name AS topic_name,
+                topics.supervisor_id AS topic_supervisor_id,
+                projects.id AS project_id,
+                projects.team_id AS project_team_id,
+                projects.topic_id AS project_topic_id,
+                projects.supervisor_id AS project_supervisor_id,
+                projects.name AS project_name,
+                users.id AS supervisor_id
+            FROM topics
+            LEFT JOIN projects ON projects.topic_id = topics.id
+            LEFT JOIN users ON users.id = topics.supervisor_id
+            WHERE topics.id = $1
+            AND topics.supervisor_id = $2;
+        `,
+        create: `
+            INSERT INTO projects (
+                team_id,
+                topic_id,
+                supervisor_id,
+                name,
+                course_code,
+                presentation_at,
+                description,
+                started_at,
+                ends_at,
+                submitted_at
+            ) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+            RETURNING *;
+        `
     },
     tasks: {
         find: `

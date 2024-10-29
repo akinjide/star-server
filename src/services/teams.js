@@ -68,7 +68,7 @@ module.exports = (app, options) => {
         })
     })
 
-    app.put('/teams/:team_id', validation.teams.update, (req, res) => {
+    app.put('/teams/:team_id', validation.teams.update, isAuthenticated(options), isEqualAuthorized, (req, res) => {
         const { team_id } = req.params
 
         return app.pg.query(query.teams.findOne, [team_id], (err, b) => {

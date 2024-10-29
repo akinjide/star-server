@@ -8,7 +8,7 @@ module.exports = {
             name: Joi.string().max(100).trim().required(),
             description: Joi.string().max(400).trim().optional(),
             raw_text: Joi.string().trim().optional(),
-            url: Joi.string().uri().trim().optional(),
+            url: Joi.string().uri().trim().optional()
         }).required()
 
         validation(req.body, schema, (err, ok) => {
@@ -29,7 +29,7 @@ module.exports = {
             name: Joi.string().max(100).trim().optional(),
             description: Joi.string().max(400).trim().optional(),
             raw_text: Joi.string().trim().optional(),
-            url: Joi.string().uri().trim().optional(),
+            url: Joi.string().uri().trim().optional()
         }).required()
 
         validation(req.body, schema, (err, ok) => {
@@ -47,7 +47,7 @@ module.exports = {
     },
     delete: (req, res, next) => {
         const schema = Joi.object().keys({
-            supervisor_id: Joi.number().integer().positive().min(1).required(),
+            supervisor_id: Joi.number().integer().positive().min(1).required()
         }).required()
 
         validation(req.body, schema, (err, ok) => {

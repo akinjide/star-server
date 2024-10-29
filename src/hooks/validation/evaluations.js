@@ -10,10 +10,10 @@ module.exports = {
                 Joi.object().keys({
                     rubric_id: Joi.number().integer().positive().required(),
                     name: Joi.string().trim().optional(),
-                    score: Joi.number().integer().positive().required(),
+                    score: Joi.number().integer().positive().required()
                 }).required()
             ).min(1).required(),
-            originality: Joi.number().integer().positive().optional(),
+            originality: Joi.number().integer().positive().optional()
         }).required()
 
         validation(req.body, schema, (err, ok) => {
