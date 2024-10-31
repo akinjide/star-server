@@ -10,6 +10,7 @@ const {
     isPermitted,
     isLessThanTwoAuthorized,
     isLessThanThreeAuthorized,
+    isLessThanFourAuthorized,
     isEqualAuthorized,
     roles
 } = require('../hooks/policy')

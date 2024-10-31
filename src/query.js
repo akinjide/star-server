@@ -223,6 +223,7 @@ module.exports = {
                 teams.name AS team_name,
                 teams.description AS team_description,
                 teams.image AS team_image,
+                topics.id AS topic_id,
                 topics.name AS topic_name,
                 topics.description AS topic_description,
                 topics.url AS topic_url,
@@ -250,6 +251,7 @@ module.exports = {
                 teams.name AS team_name,
                 teams.description AS team_description,
                 teams.image AS team_image,
+                topics.id AS topic_id,
                 topics.name AS topic_name,
                 topics.description AS topic_description,
                 topics.url AS topic_url,
@@ -262,6 +264,40 @@ module.exports = {
             INNER JOIN teams ON teams.id = projects.team_id
             INNER JOIN topics ON topics.id = projects.topic_id
             WHERE projects.id = $1;
+        `,
+        findOneForUpdate: `
+            SELECT
+                projects.id AS project_id,
+                projects.name,
+                projects.course_code,
+                projects.presentation_at,
+                projects.description,
+                projects.started_at,
+                projects.ends_at,
+                projects.submitted_at,
+                projects.created_at AS project_created_at,
+                teams.id AS team_id,
+                teams.name AS team_name,
+                teams.description AS team_description,
+                teams.image AS team_image,
+                topics.id AS topic_id,
+                topics.name AS topic_name,
+                topics.description AS topic_description,
+                topics.url AS topic_url,
+                users.id AS supervisor_id,
+                users.full_name AS supervisor_full_name,
+                users.email AS supervisor_email,
+                users.title AS supervisor_title,
+            FROM projects
+            INNER JOIN users ON users.id = projects.supervisor_id
+            INNER JOIN teams ON teams.id = projects.team_id
+            INNER JOIN topics ON topics.id = projects.topic_id
+            WHERE projects.id = $1;
+        `,
+        findOneForDelete: `
+            SELECT *
+            FROM projects
+            WHERE id = $1;
         `,
         findTopicWithSupervisor: `
             SELECT
@@ -280,6 +316,14 @@ module.exports = {
             WHERE topics.id = $1
             AND topics.supervisor_id = $2;
         `,
+        findTopicWithProject: `
+            SELECT
+                topics.id AS topic_id,
+                projects.id AS project_id
+            FROM topics
+            INNER JOIN projects ON projects.topic_id = topics.id
+            WHERE topics.id = $1;
+        `,
         create: `
             INSERT INTO projects (
                 team_id,
@@ -294,6 +338,29 @@ module.exports = {
                 submitted_at
             ) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
             RETURNING *;
+        `,
+        update: `
+            UPDATE projects
+            SET supervisor_id = $1,
+                name = $2,
+                course_code = $3,
+                presentation_at = $4,
+                description = $5,
+                started_at = $6,
+                ends_at = $7,
+                submitted_at = $8,
+                updated_at = $9
+            WHERE id = $10;
+        `,
+        delete: `
+            DELETE FROM projects
+            WHERE id = $1;
+        `,
+        assign: `
+            UPDATE projects
+            SET topic_id = $1
+                updated_at = $2
+            WHERE id = $3;
         `
     },
     tasks: {

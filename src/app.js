@@ -3,6 +3,7 @@ const compression = require('compression')
 const express = require('express')
 const passport = require('passport')
 const helmet = require('helmet')
+const cors = require('cors')
 const app = express()
 
 const pg = require('./pg')
@@ -20,6 +21,7 @@ function configure(app, options) {
 
     app.use(bodyParser.urlencoded({ extended: false }))
     app.use(bodyParser.json())
+    app.use(cors())
     app.use(compression())
     app.use(passport.initialize())
     app.use(helmet())

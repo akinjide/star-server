@@ -4,7 +4,7 @@ CREATE TABLE tasks (
     user_id INT NOT NULL,
     team_id INT NOT NULL,
     name VARCHAR(100) NOT NULL,
-    description  VARCHAR(400),
+    description VARCHAR(400),
     raw_text TEXT,
     grade SMALLINT,
     assigned_at TIMESTAMP,
