@@ -12,5 +12,5 @@ CREATE TABLE users (
     updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
 
     PRIMARY KEY(id),
-    CONSTRAINT fk_role_permissions FOREIGN KEY(role_id) REFERENCES role_permissions(role_id)
+    CONSTRAINT fk_roles FOREIGN KEY(role_id) REFERENCES roles(id)
 );
