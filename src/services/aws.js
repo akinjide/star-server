@@ -34,37 +34,40 @@ module.exports = (app, options) => {
         region: s3Cfg.region
     })
 
-    app.get('/aws/upload', validation.aws.upload, isAuthenticated(options), isEqualAuthorized, (req, res) => {
-        const { id } = req.user
-        const { content_type, upload_type } = req.query
-        const format = fileFormat(content_type)
+    app.post('/blob/upload', isAuthenticated(options), isEqualAuthorized, app.upload.single('blob'), (req, res) => {
+        const { path, size, filename, mimetype } = req.file
 
-        if (!format) {
-            return 'unknown file format'
-        }
+        return handleSuccess(req, res, null, { path, size, filename, mimetype })
 
-        const key = uuid.v4() + format
-        const params = {
-            Bucket: s3Cfg.bucket,
-            Key: `${upload_type}/${id}/${key}`,
-            Expires: s3Cfg.expiresInSec,
-            ContentType: content_type,
+        // const { content_type, upload_type } = req.query
+        // const format = fileFormat(content_type)
 
-            // This ACL makes the uploaded object publicly readable.
-            ACL: 'public-read'
-        }
+        // if (!format) {
+        //     return 'unknown file format'
+        // }
 
-        s3.getSignedUrl('putObject', params, (err, result) => {
-            if (err) {
-                return handleError(err, req, res)
-            }
+        // const key = uuid.v4() + format
+        // const params = {
+        //     Bucket: s3Cfg.bucket,
+        //     Key: `${upload_type}/${id}/${key}`,
+        //     Expires: s3Cfg.expiresInSec,
+        //     ContentType: content_type,
 
-            return handleSuccess(req, res, null, {
-                key,
-                content_type,
-                ...result,
-            })
-        })
+        //     // This ACL makes the uploaded object publicly readable.
+        //     ACL: 'public-read'
+        // }
+
+        // s3.getSignedUrl('putObject', params, (err, result) => {
+        //     if (err) {
+        //         return handleError(err, req, res)
+        //     }
+
+        //     return handleSuccess(req, res, null, {
+        //         key,
+        //         content_type,
+        //         ...result,
+        //     })
+        // })
     })
 
     app.delete('/aws/delete', validation.aws.delete, isAuthenticated(options), isEqualAuthorized, (req, res) => {

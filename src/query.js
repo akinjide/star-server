@@ -11,6 +11,7 @@ module.exports = {
                 users.role_id,
                 users.id,
                 users.email,
+                users.image,
                 ARRAY_AGG(permissions.slug) AS permissions
             FROM users
             LEFT JOIN role_permissions ON role_permissions.role_id = users.role_id
@@ -32,8 +33,9 @@ module.exports = {
                 department,
                 graduation_year,
                 student_number,
-                role_id
-            ) VALUES($1, $2, $3, $4, $5, $6, $7, $8)
+                role_id,
+                image
+            ) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
             RETURNING *;
         `,
         find: `
@@ -46,6 +48,7 @@ module.exports = {
                 full_name,
                 title,
                 student_number,
+                image,
                 created_at,
                 updated_at
             FROM users
@@ -60,6 +63,8 @@ module.exports = {
                 full_name,
                 title,
                 student_number,
+                image,
+                password,
                 created_at,
                 updated_at
             FROM users
@@ -74,6 +79,18 @@ module.exports = {
             SET role_id = $2
             WHERE id = $1;
         `,
+        updateOne: `
+            UPDATE users
+            SET full_name = $2,
+                title = $3,
+                email = $4,
+                password = $5,
+                department = $6,
+                graduation_year = $7,
+                student_number = $8,
+                role_id = $9
+            WHERE id = $1;
+        `
     },
 
     // rbac.js
@@ -390,6 +407,33 @@ module.exports = {
             INNER JOIN users ON users.id = tasks.user_id
             INNER JOIN projects ON projects.id = tasks.project_id;
         `,
+        findByUserID: `
+            SELECT
+                teams.id AS team_id,
+                teams.name AS team_name,
+                teams.description AS team_description,
+                users.id AS user_id,
+                users.email AS user_email,
+                users.full_name AS user_full_name,
+                projects.supervisor_id AS supervisor_id,
+                projects.id AS project_id,
+                projects.name AS project_name,
+                projects.description AS project_description,
+                tasks.id AS task_id,
+                tasks.name AS task_name,
+                tasks.raw_text AS task_raw_text,
+                tasks.description AS task_description,
+                tasks.grade AS task_grade,
+                tasks.assigned_at AS task_assigned_at,
+                tasks.ends_at AS task_ends_at,
+                tasks.submitted_at AS task_submitted_at,
+                tasks.created_at AS task_created_at
+            FROM tasks
+            INNER JOIN teams ON teams.id = tasks.team_id
+            INNER JOIN users ON users.id = tasks.user_id
+            INNER JOIN projects ON projects.id = tasks.project_id
+            WHERE tasks.user_id = $1;
+        `,
         findOne: `
             SELECT
                 teams.id AS team_id,
@@ -419,6 +463,77 @@ module.exports = {
         `
     },
 
+    // reports.js
+    reports: {
+        find: `
+            SELECT
+                reports.id AS report_id,
+                reports.type AS report_type,
+                reports.raw_text AS report_text,
+                reports.url AS report_url,
+                reports.version AS report_version,
+                reports.added_at AS report_added_at,
+                projects.id AS project_id,
+                projects.name AS project_name,
+                projects.course_code AS course_code,
+                projects.presentation_at,
+                projects.description AS project_description,
+                projects.started_at AS project_started_at,
+                projects.ends_at AS project_ends_at,
+                projects.submitted_at AS project_submitted_at,
+                projects.created_at AS project_created_at
+            FROM reports
+            INNER JOIN projects ON projects.id = reports.project_id;
+        `,
+        findOne: `
+            SELECT
+                reports.id AS report_id,
+                reports.type AS report_type,
+                reports.raw_text AS report_text,
+                reports.url AS report_url,
+                reports.version AS report_version,
+                reports.added_at AS report_added_at,
+                projects.id AS project_id,
+                projects.name AS project_name,
+                projects.course_code AS course_code,
+                projects.presentation_at,
+                projects.description AS project_description,
+                projects.started_at AS project_started_at,
+                projects.ends_at AS project_ends_at,
+                projects.submitted_at AS project_submitted_at,
+                projects.created_at AS project_created_at
+            FROM reports
+            INNER JOIN projects ON projects.id = reports.project_id
+            WHERE reports.id = $1;
+        `,
+        findWithTeam: `
+            SELECT
+                reports.id AS report_id,
+                reports.type AS report_type,
+                reports.raw_text AS report_text,
+                reports.url AS report_url,
+                reports.version AS report_version,
+                reports.added_at AS report_added_at,
+                projects.id AS project_id,
+                projects.name AS project_name,
+                projects.course_code AS course_code,
+                projects.presentation_at,
+                projects.description AS project_description,
+                projects.started_at AS project_started_at,
+                projects.ends_at AS project_ends_at,
+                projects.submitted_at AS project_submitted_at,
+                projects.created_at AS project_created_at,
+                teams.id AS team_id,
+                teams.name AS team_name,
+                teams.description AS team_description,
+                teams.image AS team_image
+            FROM reports
+            INNER JOIN projects ON projects.id = reports.project_id
+            INNER JOIN teams ON teams.id = projects.team_id
+            WHERE teams.id = $1;
+        `
+    },
+
     // teams.js
     teams: {
         findByName: `
@@ -428,22 +543,42 @@ module.exports = {
         `,
         find: `
             SELECT
-                teams.id AS team_id,
-                teams.name AS team_name,
-                teams.description AS team_description,
-                teams.image AS team_image,
-                ARRAY_AGG(
-                    SELECT
-                        members.is_lead,
-                        users.id,
-                        users.full_name,
-                        users.email,
-                        users.title
-                    FROM members
-                    INNER JOIN users ON users.id = members.member_id
-                    WHERE members.team_id = teams.id
-                ) AS team_members
-            FROM teams;
+                teams.id AS id,
+                teams.name AS name,
+                teams.description AS description,
+                teams.image AS image,
+                ARRAY_AGG(team_members.member) AS members
+            FROM teams
+            LEFT JOIN (
+                SELECT
+                    members.team_id,
+                    json_build_object(
+                        'is_lead', members.is_lead,
+                        'member_id', members.member_id,
+                        'full_name', users.full_name,
+                        'image', users.image,
+                        'department', users.department,
+                        'student_number', users.student_number,
+                        'email', users.email
+                    ) AS member
+                FROM members
+                LEFT JOIN users ON users.id = members.member_id
+                GROUP BY
+                    members.team_id,
+                    members.member_id,
+                    members.is_lead,
+                    users.full_name,
+                    users.image,
+                    users.department,
+                    users.student_number,
+                    users.email
+            ) team_members ON team_members.team_id = teams.id
+            GROUP BY
+                teams.id,
+                teams.name,
+                teams.description,
+                teams.image
+            ORDER BY teams.name ASC;
         `,
         create: `
             INSERT INTO teams(
@@ -596,5 +731,24 @@ module.exports = {
     },
 
     // ai.js
-    ai: {}
+    ai: {},
+
+    // messages.js
+    messages: {
+        find: `
+            SELECT
+                messages.*,
+                users.full_name AS user_full_name,
+                users.image AS user_image
+            FROM messages
+            LEFT JOIN users ON users.id = messages.user_id
+            ORDER BY messages.added_at ASC
+        `,
+        create: `
+            INSERT INTO messages(
+                user_id,
+                message
+            ) VALUES ($1, $2);
+        `
+    }
 }

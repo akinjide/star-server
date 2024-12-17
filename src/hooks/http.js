@@ -3,6 +3,7 @@ const logger = require('../logger')
 
 const handleError = (err, req, res, errMessage, errCode = 500) => {
     if (err) {
+        console.log(err)
         logger.error(err, { req: req })
     }
 

@@ -23,7 +23,7 @@ module.exports = (app, options) => {
             }
 
             if (b.rows && b.rows[0]) {
-                return res.status(200).json(b.rows[0])
+                return handleSuccess(req, res, null, b.rows)
             }
 
             return handleSuccess(req, res, 'no teams')
@@ -39,7 +39,7 @@ module.exports = (app, options) => {
             }
 
             if (b.rows && b.rows[0]) {
-                return res.status(200).json(b.rows[0])
+                return handleSuccess(req, res, null, b.rows[0])
             }
 
             return handleSuccess(req, res, 'team not found')
@@ -47,7 +47,7 @@ module.exports = (app, options) => {
     })
 
     app.post('/teams', validation.teams.create, isAuthenticated(options), isEqualAuthorized, (req, res) => {
-        const { name, description, image } = req.body
+        const { name, description, image = '' } = req.body
 
         return app.pg.query(query.teams.findByName, [name], (err, b) => {
             if (err) {
@@ -63,7 +63,7 @@ module.exports = (app, options) => {
                     return handleError(err, req, res)
                 }
 
-                return res.status(200).json(b.rows[0])
+                return handleSuccess(req, res, null, b.rows[0])
             })
         })
     })
@@ -77,7 +77,7 @@ module.exports = (app, options) => {
             }
 
             if (b.rows && b.rows[0]) {
-                const { name, description, image } = {
+                const { name, description, image, members } = {
                     ...b.rows[0],
                     ...req.body
                 }
@@ -87,7 +87,7 @@ module.exports = (app, options) => {
                         return handleError(err, req, res)
                     }
 
-                    return res.status(200).json(b.rows[0])
+                    return handleSuccess(req, res, null, b.rows[0])
                 })
             }
 
@@ -142,7 +142,7 @@ module.exports = (app, options) => {
             }
 
             if (b.rows && b.rows[0]) {
-                return res.status(200).json(b.rows[0])
+                return handleSuccess(req, res, null, b.rows[0])
             }
 
             return handleSuccess(req, res, 'team not found')
@@ -174,7 +174,7 @@ module.exports = (app, options) => {
                             return handleError(err, req, res)
                         }
 
-                        return res.status(200).json(b.rows[0])
+                        return handleSuccess(req, res, null, b.rows[0])
                     })
                 })
             }
@@ -208,6 +208,32 @@ module.exports = (app, options) => {
                     }
 
                     return handleSuccess(req, res, 'member not found')
+                })
+            }
+
+            return handleSuccess(req, res, 'team not found')
+        })
+    })
+
+    app.get('/teams/:team_id/reports', isAuthenticated(options), isEqualAuthorized, (req, res) => {
+        const { team_id } = req.params
+
+        return app.pg.query(query.teams.findOne, [team_id], (err, b) => {
+            if (err) {
+                return handleError(err, req, res)
+            }
+
+            if (b.rows && b.rows[0]) {
+                return app.pg.query(query.reports.findWithTeam, [team_id], (err, b) => {
+                    if (err) {
+                        return handleError(err, req, res)
+                    }
+
+                    if (b.rows && b.rows[0]) {
+                        return handleSuccess(req, res, null, b.rows)
+                    }
+
+                    return handleSuccess(req, res, 'reports not found')
                 })
             }
 

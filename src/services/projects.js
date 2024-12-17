@@ -23,7 +23,7 @@ module.exports = (app, options) => {
             }
 
             if (b.rows && b.rows[0]) {
-                return handleSuccess(req, res, null, b.rows[0])
+                return handleSuccess(req, res, null, b.rows)
             }
 
             return handleSuccess(req, res, 'no projects')
@@ -186,7 +186,23 @@ module.exports = (app, options) => {
             }
 
             if (b.rows && b.rows[0]) {
-                return handleSuccess(req, res, null, b.rows[0])
+                return handleSuccess(req, res, null, b.rows)
+            }
+
+            return handleSuccess(req, res, 'no tasks')
+        })
+    })
+
+    app.get('/tasks/:user_id', isAuthenticated(options), isEqualAuthorized, (req, res) => {
+        const { user_id } = req.params
+
+        return app.pg.query(query.tasks.findByUserID, [user_id], (err, b) => {
+            if (err) {
+                return handleError(err, req, res)
+            }
+
+            if (b.rows && b.rows[0]) {
+                return handleSuccess(req, res, null, b.rows)
             }
 
             return handleSuccess(req, res, 'no tasks')

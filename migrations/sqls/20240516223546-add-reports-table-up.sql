@@ -1,7 +1,7 @@
 CREATE TABLE reports (
     id INT GENERATED ALWAYS AS IDENTITY,
     project_id INT NOT NULL,
-    type VARCHAR(50) NOT NULL,
+    name VARCHAR(50) NOT NULL,
     raw_text TEXT,
     url TEXT,
     version SMALLINT,

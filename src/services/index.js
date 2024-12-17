@@ -8,6 +8,7 @@ const ai = require('./ai')
 const evaluations = require('./evaluations')
 const reports = require('./reports')
 const aws = require('./aws')
+const messages = require('./messages')
 
 const services = (app, options) => {
     users(app, options)
@@ -20,6 +21,7 @@ const services = (app, options) => {
     evaluations(app, options)
     reports(app, options)
     aws(app, options)
+    messages(app, options)
 
     app.get('/', (req, res) => {
         res.send('OK')
