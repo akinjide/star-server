@@ -23,7 +23,7 @@ module.exports = (app, options) => {
             }
 
             if (b.rows && b.rows[0]) {
-                return res.status(200).json(b.rows[0])
+                return handleSuccess(req, res, null, b.rows)
             }
 
             return handleSuccess(req, res, 'no topics')
@@ -39,7 +39,7 @@ module.exports = (app, options) => {
             }
 
             if (b.rows && b.rows[0]) {
-                return res.status(200).json(b.rows[0])
+                return handleSuccess(req, res, null, b.rows[0])
             }
 
             return handleSuccess(req, res, 'topic not found')
@@ -60,7 +60,7 @@ module.exports = (app, options) => {
                         return handleError(err, req, res)
                     }
 
-                    return res.status(200).json(b.rows[0])
+                    return handleSuccess(req, res, null, b.rows[0])
                 })
             }
 
@@ -87,7 +87,7 @@ module.exports = (app, options) => {
                         return handleError(err, req, res)
                     }
 
-                    return res.status(200).json(b.rows[0])
+                    return handleSuccess(req, res, null, b.rows[0])
                 })
             }
 

@@ -143,7 +143,8 @@ module.exports = (app, options) => {
                     graduation_year,
                     student_number,
                     role_id,
-                    password
+                    password,
+                    image
                 } = {
                     ...b.rows[0],
                     ...req.body
@@ -155,7 +156,7 @@ module.exports = (app, options) => {
                             return handleError(err, req, res)
                         }
 
-                        const p = [user_id, full_name, title, email, hash, department, graduation_year, student_number, role_id]
+                        const p = [user_id, full_name, title, email, hash, department, graduation_year, student_number, image, role_id]
                         return applyChanges(p, (err) => {
                             if (err) {
                                 return handleError(err, req, res)
@@ -166,7 +167,7 @@ module.exports = (app, options) => {
                     })
                 }
 
-                const p = [user_id, full_name, title, email, password, department, graduation_year, student_number, role_id]
+                const p = [user_id, full_name, title, email, password, department, graduation_year, student_number, image, role_id]
                 return applyChanges(p, (err, b) => {
                     if (err) {
                         return handleError(err, req, res)

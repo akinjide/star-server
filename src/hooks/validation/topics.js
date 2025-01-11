@@ -8,8 +8,8 @@ module.exports = {
             name: Joi.string().max(100).trim().required(),
             description: Joi.string().max(400).trim().optional(),
             raw_text: Joi.string().trim().optional(),
-            url: Joi.string().uri().trim().optional()
-        }).required()
+            url: Joi.string().trim().optional()
+        }).unknown(true).required()
 
         validation(req.body, schema, (err, ok) => {
             if (!ok) {

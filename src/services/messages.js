@@ -21,7 +21,6 @@ module.exports = (app, options) => {
 
         return app.pg.query(query.messages.find, [], (err, b) => {
             if (err) {
-                console.log(err)
                 return handleError(err, req, res)
             }
 
@@ -31,12 +30,12 @@ module.exports = (app, options) => {
                 for (const row of b.rows) {
                     if (user_id == row.user_id) {
                         messages.push({
-                            prependAvatar: row.user_image,
+                            avatar: row.user_image,
                             title: 'You',
                             subtitle: {
                                 created_at: row.added_at,
-                                message: row.message,
-                                color: "blue"
+                                text: row.message,
+                                color: "teal"
                             }
                         })
 
@@ -44,12 +43,12 @@ module.exports = (app, options) => {
                     }
 
                     messages.push({
-                        prependAvatar: row.user_image,
+                        avatar: row.user_image,
                         title: row.user_full_name,
                         subtitle: {
                             created_at: row.added_at,
-                            message: row.message,
-                            color: "grey"
+                            text: row.message,
+                            color: "black"
                         }
                     })
                 }

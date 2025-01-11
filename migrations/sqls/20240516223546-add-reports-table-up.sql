@@ -4,6 +4,7 @@ CREATE TABLE reports (
     name VARCHAR(50) NOT NULL,
     raw_text TEXT,
     url TEXT,
+    comment TEXT,
     version SMALLINT,
     added_at TIMESTAMP NOT NULL DEFAULT NOW(),
 

@@ -25,9 +25,8 @@ module.exports = {
     update: (req, res, next) => {
         const schema = Joi.object().keys({
             name: Joi.string().max(100).trim().optional(),
-            description: Joi.string().max(400).trim().optional(),
-            image: Joi.string().uri().trim().optional()
-        }).required()
+            description: Joi.string().max(400).trim().optional()
+        }).unknown(true)
 
         validation(req.body, schema, (err, ok) => {
             if (!ok) {

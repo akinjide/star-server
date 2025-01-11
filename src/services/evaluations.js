@@ -1,5 +1,3 @@
-// TODO
-
 const http = require('http')
 const passport = require('passport')
 const query = require('../query')
@@ -21,7 +19,7 @@ module.exports = (app, options) => {
     app.get('/evaluations/:evaluation_id', isAuthenticated(options), isLessThanFourAuthorized, (req, res) => {
         const { evaluation_id } = req.params
 
-        return app.pg.query(query.evaluations.find, [evaluation_id], (err, b) => {
+        return app.pg.query(query.evaluations.findOne, [evaluation_id], (err, b) => {
             if (err) {
                 return handleError(err, req, res)
             }
@@ -133,8 +131,18 @@ module.exports = (app, options) => {
         })
     })
 
-    app.put('/evaluations/:evaluation_id', validation.evaluations.update, isAuthenticated(options), isLessThanFourAuthorized, (req, res) => {
+    app.get('/evaluations', isAuthenticated(options), isLessThanFourAuthorized, (req, res) => {
+        return app.pg.query(query.evaluations.find, [], (err, b) => {
+            if (err) {
+                return handleError(err, req, res)
+            }
 
+            if (b.rows && b.rows[0]) {
+                return handleSuccess(req, res, null, b.rows)
+            }
+
+            return handleSuccess(req, res, 'no evaluations found')
+        })
     })
 
     app.get('/evaluations/projects/:project_id/download', isAuthenticated(options), isEqualAuthorized, (req, res) => {
@@ -152,12 +160,13 @@ module.exports = (app, options) => {
                     if ((row.rubrics_section && !row.is_grade_summary) && !evaluation[row.rubrics_section]) {
                         evaluation[row.rubrics_section] = {
                             total: 0,
+                            section_percentage: row.rubrics_section_percentage,
                             rows: []
                         }
                     }
 
                     if (!row.rubrics_section && row.is_grade_summary) {
-                        evaluation['Summary'] = row
+                        evaluation['Grade Summary'] = row
                         continue
                     }
 
@@ -178,8 +187,8 @@ module.exports = (app, options) => {
                     }
                 }
 
-                evaluation['Summary'] = {
-                    ...evaluation['Summary'],
+                evaluation['Grade Summary'] = {
+                    ...evaluation['Grade Summary'],
                     g_total: gTotal,
                     t_total: gTotal / 4,
                     t_o: gTotal * (gTotal / 4)

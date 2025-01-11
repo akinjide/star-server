@@ -7,7 +7,7 @@ const topics = require('./topics')
 const ai = require('./ai')
 const evaluations = require('./evaluations')
 const reports = require('./reports')
-const aws = require('./aws')
+const blob = require('./blob')
 const messages = require('./messages')
 
 const services = (app, options) => {
@@ -20,7 +20,7 @@ const services = (app, options) => {
     ai(app, options)
     evaluations(app, options)
     reports(app, options)
-    aws(app, options)
+    blob(app, options)
     messages(app, options)
 
     app.get('/', (req, res) => {

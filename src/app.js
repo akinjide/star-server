@@ -6,6 +6,7 @@ const helmet = require('helmet')
 const cors = require('cors')
 const multer = require('multer')
 const path = require('path')
+const uuid = require('uuid')
 const app = express()
 
 const pg = require('./pg')
@@ -18,15 +19,7 @@ const options = {
     },
 }
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const { upload_type } = req.query
-
-    cb(null, 'uploads/' + upload_type + '/')
-  },
-  filename: function (req, file, cb) {
-    const { id } = req.user
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+const fileFormat = (file) => {
     let ext = 'jpg'
 
     if (file.originalname) {
@@ -34,7 +27,21 @@ const storage = multer.diskStorage({
         ext = parts[parts.length - 1]
     }
 
-    cb(null, id + '-' + uniqueSuffix + '.' + ext)
+    return ext
+}
+
+const storage = multer.diskStorage({
+  destination: function (req, file, callback) {
+    const { upload_type } = req.query
+
+    callback(null, 'uploads/' + upload_type + '/')
+  },
+  filename: function (req, file, callback) {
+    const { id } = req.user
+    const uniqueSuffix = Date.now() + '-' + uuid.v4()
+    const ext = fileFormat(file)
+
+    callback(null, id + '-' + uniqueSuffix + '.' + ext)
   }
 })
 
@@ -42,6 +49,7 @@ function configure(app, options) {
     app.pg = pg
     app.upload = multer({ storage: storage })
 
+    app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')))
     app.use(bodyParser.urlencoded({ extended: false }))
     app.use(bodyParser.json())
     app.use(cors())
@@ -51,7 +59,6 @@ function configure(app, options) {
         crossOriginResourcePolicy: false,
         xPoweredBy: false,
     }))
-    app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')))
 }
 
 strategy.local()

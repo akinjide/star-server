@@ -46,6 +46,22 @@ module.exports = (app, options) => {
         })
     })
 
+    app.get('/projects/:team_id', isAuthenticated(options), isEqualAuthorized, (req, res) => {
+        const { team_id } = req.params
+
+        return app.pg.query(query.projects.findOneByTeam, [team_id], (err, b) => {
+            if (err) {
+                return handleError(err, req, res)
+            }
+
+            if (b.rows && b.rows[0]) {
+                return handleSuccess(req, res, null, b.rows[0])
+            }
+
+            return handleSuccess(req, res, 'project not found')
+        })
+    })
+
     app.post('/projects', validation.projects.create, isAuthenticated(options), isEqualAuthorized, (req, res) => {
         const { team_id, topic_id = null, supervisor_id, name, course_code, presentation_at = null, description, started_at = new Date(), ends_at = null, submitted_at = null } = req.body
 
@@ -225,16 +241,79 @@ module.exports = (app, options) => {
         })
     })
 
-    app.post('/tasks', isAuthenticated(options), isEqualAuthorized, (req, res) => {
-        const { project_id, user_id, team_id, name, description, raw_text, grade, assigned_at, ends_at, submitted_at } = req.body
+    app.put('/tasks/:task_id/complete', isAuthenticated(options), isEqualAuthorized, (req, res) => {
+        const { task_id } = req.params
 
+        return app.pg.query(query.tasks.findOne, [task_id], (err, b) => {
+            if (err) {
+                return handleError(err, req, res)
+            }
+
+            if (b.rows && b.rows[0]) {
+                return app.pg.query(query.tasks.mark, [new Date(), task_id], (err, b) => {
+                    if (err) {
+                        return handleError(err, req, res)
+                    }
+
+                    return handleSuccess(req, res, null)
+                })
+            }
+
+            return handleSuccess(req, res, 'task not found')
+        })
+    })
+
+    app.post('/tasks', isAuthenticated(options), isEqualAuthorized, (req, res) => {
+        const { project_id, user_id, team_id, name, description, raw_text, assigned_at, ends_at } = req.body
+
+        return app.pg.query(query.teams.findOne, [team_id], (err, b) => {
+            if (err) {
+                return handleError(err, req, res)
+            }
+
+            if (b.rows && !b.rows[0]) {
+                return handleSuccess(req, res, 'team not found')
+            }
+
+            return app.pg.query(query.tasks.create, [project_id, user_id, team_id, name, description, raw_text, assigned_at, ends_at], (err, b) => {
+                if (err) {
+                    return handleError(err, req, res)
+                }
+
+                return handleSuccess(req, res, null, b.rows[0])
+            })
+        })
+    })
+
+    app.put('/tasks/:task_id', isAuthenticated(options), isEqualAuthorized, (req, res) => {
+        const { task_id } = req.params
+
+        return app.pg.query(query.tasks.findOneForUpdate, [task_id], (err, b) => {
+            if (err) {
+                return handleError(err, req, res)
+            }
+
+            if (b.rows && !b.rows[0]) {
+                return handleSuccess(req, res, 'task not found')
+            }
+
+            const [ row ] = b.rows;
+            const { name, raw_text, comment, description, grade, ends_at } = {
+                ...row,
+                ...req.body
+            }
+
+            return app.pg.query(query.tasks.update, [name, raw_text, comment, description, grade, ends_at, new Date(), task_id], (err, b) => {
+                if (err) {
+                    return handleError(err, req, res)
+                }
+
+                return handleSuccess(req, res, 'task updated successfully')
+            })
+        })
     })
 
     app.get('/projects/:project_id/tasks', isAuthenticated(options), isEqualAuthorized, (req, res) => {
-
-    })
-
-    app.get('/projects/:project_id/:team_id', isAuthenticated(options), isEqualAuthorized, (req, res) => {
 
     })
 }

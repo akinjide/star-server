@@ -77,12 +77,12 @@ module.exports = (app, options) => {
             }
 
             if (b.rows && b.rows[0]) {
-                const { name, description, image, members } = {
+                const { name, description, image = '' } = {
                     ...b.rows[0],
                     ...req.body
                 }
 
-                return app.pg.query(query.teams.update, [name, description, image, Date.now(), team_id], (err, b) => {
+                return app.pg.query(query.teams.update, [name, description, image, new Date(), team_id], (err, b) => {
                     if (err) {
                         return handleError(err, req, res)
                     }
@@ -121,6 +121,22 @@ module.exports = (app, options) => {
         const { team_id, member_id } = req.params
 
         return app.pg.query(query.teams.findMember, [team_id], (err, b) => {
+            if (err) {
+                return handleError(err, req, res)
+            }
+
+            if (b.rows && b.rows[0]) {
+                return handleSuccess(req, res, null, b.rows[0])
+            }
+
+            return handleSuccess(req, res, 'member not found')
+        })
+    })
+
+    app.get('/teams/members/:member_id', isAuthenticated(options), isEqualAuthorized, (req, res) => {
+        const { member_id } = req.params
+
+        return app.pg.query(query.teams.findByMember, [member_id], (err, b) => {
             if (err) {
                 return handleError(err, req, res)
             }

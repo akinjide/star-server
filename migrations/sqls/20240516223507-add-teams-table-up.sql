@@ -8,3 +8,7 @@ CREATE TABLE teams (
 
     PRIMARY KEY(id)
 );
+
+INSERT INTO teams (name, description)
+VALUES  ('Team A', 'Team A will be working on the Online Management Solution for Graduation Project'),
+        ('Team B', 'Team B will be working on the Design YouTube project');
