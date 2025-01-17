@@ -39,7 +39,7 @@ module.exports = {
             started_at: Joi.date().iso().optional(),
             ends_at: Joi.date().iso().optional(),
             submitted_at: Joi.date().iso().optional(),
-        }).required()
+        }).unknown(true).required()
 
         validation(req.body, schema, (err, ok) => {
             if (!ok) {

@@ -342,7 +342,7 @@ module.exports = {
                 users.id AS supervisor_id,
                 users.full_name AS supervisor_full_name,
                 users.email AS supervisor_email,
-                users.title AS supervisor_title,
+                users.title AS supervisor_title
             FROM projects
             INNER JOIN users ON users.id = projects.supervisor_id
             INNER JOIN teams ON teams.id = projects.team_id
@@ -386,12 +386,14 @@ module.exports = {
                 supervisor_id,
                 name,
                 course_code,
+                semester,
+                year,
                 presentation_at,
                 description,
                 started_at,
                 ends_at,
                 submitted_at
-            ) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+            ) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
             RETURNING *;
         `,
         update: `
@@ -399,13 +401,15 @@ module.exports = {
             SET supervisor_id = $1,
                 name = $2,
                 course_code = $3,
-                presentation_at = $4,
-                description = $5,
-                started_at = $6,
-                ends_at = $7,
-                submitted_at = $8,
-                updated_at = $9
-            WHERE id = $10;
+                semester = $4,
+                year = $5,
+                presentation_at = $6,
+                description = $7,
+                started_at = $8,
+                ends_at = $9,
+                submitted_at = $10,
+                updated_at = $11
+            WHERE id = $12;
         `,
         delete: `
             DELETE FROM projects
@@ -536,7 +540,11 @@ module.exports = {
                 ends_at = $6,
                 updated_at = $7
             WHERE id = $8
-        `
+        `,
+        deleteOne: `
+            DELETE FROM tasks
+            WHERE id = $1;
+        `,
     },
 
     // reports.js

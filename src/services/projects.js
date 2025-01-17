@@ -63,7 +63,7 @@ module.exports = (app, options) => {
     })
 
     app.post('/projects', validation.projects.create, isAuthenticated(options), isEqualAuthorized, (req, res) => {
-        const { team_id, topic_id = null, supervisor_id, name, course_code, presentation_at = null, description, started_at = new Date(), ends_at = null, submitted_at = null } = req.body
+        const { team_id, topic_id = null, supervisor_id, name, course_code, semester, year, presentation_at = null, description, started_at = new Date(), ends_at = null, submitted_at = null } = req.body
 
         return app.pg.query(query.teams.findOne, [team_id], (err, b) => {
             if (err) {
@@ -100,7 +100,7 @@ module.exports = (app, options) => {
                 }
 
                 if (!row.project_id && row.topic_id) {
-                    return app.pg.query(query.projects.create, [team_id, topic_id, supervisor_id, name, course_code, presentation_at, description, started_at, ends_at, submitted_at], (err, b) => {
+                    return app.pg.query(query.projects.create, [team_id, topic_id, supervisor_id, name, course_code, semester, year, presentation_at, description, started_at, ends_at, submitted_at], (err, b) => {
                         if (err) {
                             return handleError(err, req, res)
                         }
@@ -125,12 +125,12 @@ module.exports = (app, options) => {
             }
 
             const [row] = b.rows;
-            const { supervisor_id, name, course_code, presentation_at, description, started_at, ends_at, submitted_at } = {
+            const { supervisor_id, name, course_code, semester, year, presentation_at, description, started_at, ends_at, submitted_at } = {
                 ...row,
                 ...req.body
             }
 
-            return app.pg.query(query.projects.update, [supervisor_id, name, course_code, presentation_at, description, started_at, ends_at, submitted_at, new Date(), project_id], (err, b) => {
+            return app.pg.query(query.projects.update, [supervisor_id, name, course_code, semester, year, presentation_at, description, started_at, ends_at, submitted_at, new Date(), project_id], (err, b) => {
                 if (err) {
                     return handleError(err, req, res)
                 }
@@ -313,7 +313,25 @@ module.exports = (app, options) => {
         })
     })
 
-    app.get('/projects/:project_id/tasks', isAuthenticated(options), isEqualAuthorized, (req, res) => {
+    app.delete('/tasks/:task_id', isAuthenticated(options), isEqualAuthorized, (req, res) => {
+        const { task_id } = req.params
 
+        return app.pg.query(query.tasks.findOneForUpdate, [task_id], (err, b) => {
+            if (err) {
+                return handleError(err, req, res)
+            }
+
+            if (b.rows && !b.rows[0]) {
+                return handleSuccess(req, res, 'task not found')
+            }
+
+            return app.pg.query(query.tasks.deleteOne, [task_id], (err, b) => {
+                if (err) {
+                    return handleError(err, req, res)
+                }
+
+                return handleSuccess(req, res, 'task deleted successfully')
+            })
+        })
     })
 }
