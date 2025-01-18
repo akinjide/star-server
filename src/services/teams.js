@@ -47,7 +47,7 @@ module.exports = (app, options) => {
     })
 
     app.post('/teams', validation.teams.create, isAuthenticated(options), isEqualAuthorized, (req, res) => {
-        const { name, description, image = '' } = req.body
+        const { name, description, image = 'uploads/images/13099629981030824020.png' } = req.body
 
         return app.pg.query(query.teams.findByName, [name], (err, b) => {
             if (err) {

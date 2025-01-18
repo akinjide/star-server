@@ -1,8 +1,6 @@
 module.exports = {
     // users.js
-    auth: {
-
-    },
+    auth: {},
     users: {
         findByEmail: `
             SELECT
@@ -194,10 +192,10 @@ module.exports = {
                 users.id AS supervisor_id,
                 users.email AS supervisor_email,
                 users.full_name AS supervisor_full_name,
-                users.title AS supervisor_title,
+                users.title AS supervisor_title
             FROM topics
             INNER JOIN users ON users.id = topics.supervisor_id
-            WHERE topic_id = $1;
+            WHERE topics.id = $1;
         `,
         create: `
             INSERT INTO topics(
@@ -246,6 +244,7 @@ module.exports = {
                 topics.id AS topic_id,
                 topics.name AS topic_name,
                 topics.description AS topic_description,
+                topics.raw_text AS topic_raw_text,
                 topics.url AS topic_url,
                 users.id AS supervisor_id,
                 users.full_name AS supervisor_full_name,
@@ -276,6 +275,7 @@ module.exports = {
                 topics.id AS topic_id,
                 topics.name AS topic_name,
                 topics.description AS topic_description,
+                topics.raw_text AS topic_raw_text,
                 topics.url AS topic_url,
                 users.id AS supervisor_id,
                 users.full_name AS supervisor_full_name,
@@ -307,6 +307,7 @@ module.exports = {
                 topics.id AS topic_id,
                 topics.name AS topic_name,
                 topics.description AS topic_description,
+                topics.raw_text AS topic_raw_text,
                 topics.url AS topic_url,
                 users.id AS supervisor_id,
                 users.full_name AS supervisor_full_name,
@@ -338,6 +339,7 @@ module.exports = {
                 topics.id AS topic_id,
                 topics.name AS topic_name,
                 topics.description AS topic_description,
+                topics.raw_text AS topic_raw_text,
                 topics.url AS topic_url,
                 users.id AS supervisor_id,
                 users.full_name AS supervisor_full_name,

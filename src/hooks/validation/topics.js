@@ -28,9 +28,9 @@ module.exports = {
         const schema = Joi.object().keys({
             name: Joi.string().max(100).trim().optional(),
             description: Joi.string().max(400).trim().optional(),
-            raw_text: Joi.string().trim().optional(),
+            // raw_text: Joi.string().trim().optional(),
             url: Joi.string().uri().trim().optional()
-        }).required()
+        }).unknown(true).required()
 
         validation(req.body, schema, (err, ok) => {
             if (!ok) {

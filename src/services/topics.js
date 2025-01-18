@@ -82,7 +82,7 @@ module.exports = (app, options) => {
                     ...req.body
                 }
 
-                return app.pg.query(query.topics.update, [name, url, description, raw_text, Date.now(), topic_id], (err, b) => {
+                return app.pg.query(query.topics.update, [name, url, description, raw_text, new Date(), topic_id], (err, b) => {
                     if (err) {
                         return handleError(err, req, res)
                     }
