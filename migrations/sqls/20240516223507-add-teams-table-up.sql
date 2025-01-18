@@ -9,6 +9,6 @@ CREATE TABLE teams (
     PRIMARY KEY(id)
 );
 
-INSERT INTO teams (name, description)
-VALUES  ('Team A', 'Team A will be working on the Online Management Solution for Graduation Project'),
-        ('Team B', 'Team B will be working on the Design YouTube project');
+INSERT INTO teams (name, description, image)
+VALUES  ('Team A', 'Team A will be working on the Online Management Solution for Graduation Project', 'uploads/images/13099629981030824020.png'),
+        ('Team B', 'Team B will be working on the Design YouTube project', 'uploads/images/13099629981030824020.png');
