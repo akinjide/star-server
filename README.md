@@ -52,3 +52,7 @@ $ npm run dev
     - logger.js - includes application logging logic
     - pg.js - includes postgreSQL connection and query logic
     - query.js - includes SQL queries executable by application logic
+
+## Troubleshoot
+
+- Restart postgresql: `sudo systemctl restart postgresql.service`

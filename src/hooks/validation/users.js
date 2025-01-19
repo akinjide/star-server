@@ -7,7 +7,7 @@ module.exports = {
         const schema = Joi.object().keys({
             email: Joi.string().email().trim().required(),
             passwd: Joi.string().trim().required()
-        }).required()
+        }).unknown(true).required()
 
         validation(req.body, schema, (err, ok) => {
             if (!ok) {
@@ -32,7 +32,7 @@ module.exports = {
             graduation_year: Joi.number().integer().positive().optional(),
             student_number: Joi.number().integer().positive().optional(),
             role_id: Joi.number().integer().valid(...roles.keys()).optional()
-        }).required()
+        }).unknown(true).required()
 
         validation(req.body, schema, (err, ok) => {
             if (!ok) {

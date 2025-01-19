@@ -57,7 +57,7 @@ module.exports = {
     assign: (req, res, next) => {
         const schema = Joi.object().keys({
             topic_id: Joi.number().integer().positive().required()
-        }).required()
+        }).unknown(true).required()
 
         validation(req.body, schema, (err, ok) => {
             if (!ok) {

@@ -14,7 +14,7 @@ module.exports = {
                 }).required()
             ).min(1).required(),
             originality: Joi.number().integer().positive().optional()
-        }).required()
+        }).unknown(true).required()
 
         validation(req.body, schema, (err, ok) => {
             if (!ok) {

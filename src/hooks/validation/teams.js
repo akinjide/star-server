@@ -6,7 +6,6 @@ module.exports = {
         const schema = Joi.object().keys({
             name: Joi.string().max(100).trim().required(),
             description: Joi.string().max(400).trim().required(),
-            image: Joi.string().uri().trim().optional()
         }).unknown(true).required()
 
         validation(req.body, schema, (err, ok) => {
@@ -45,7 +44,7 @@ module.exports = {
         const schema = Joi.object().keys({
             member_id: Joi.number().integer().positive().min(1).required(),
             is_lead: Joi.boolean().optional()
-        }).required()
+        }).unknown(true).required()
 
         validation(req.body, schema, (err, ok) => {
             if (!ok) {

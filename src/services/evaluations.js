@@ -187,11 +187,14 @@ module.exports = (app, options) => {
                     }
                 }
 
+                const tTotal = gTotal / 4
+                const tO = tTotal * (evaluation['Grade Summary']['originality'] / 100)
+
                 evaluation['Grade Summary'] = {
                     ...evaluation['Grade Summary'],
                     g_total: gTotal,
-                    t_total: gTotal / 4,
-                    t_o: gTotal * (gTotal / 4)
+                    t_total: Math.round(tTotal),
+                    t_o: Math.round(tO)
                 }
 
                 return handleSuccess(req, res, null, evaluation)

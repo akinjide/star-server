@@ -48,7 +48,7 @@ module.exports = {
     delete: (req, res, next) => {
         const schema = Joi.object().keys({
             supervisor_id: Joi.number().integer().positive().min(1).required()
-        }).required()
+        }).unknown(true).required()
 
         validation(req.body, schema, (err, ok) => {
             if (!ok) {
