@@ -19,3 +19,7 @@ CREATE TABLE tasks (
     CONSTRAINT fk_users FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
     CONSTRAINT fk_teams FOREIGN KEY(team_id) REFERENCES teams(id)
 );
+
+INSERT INTO tasks(project_id, user_id, team_id, name, description, assigned_at, ends_at)
+VALUES  (1, 13, 1, 'Submit PPM', 'The PPM report should have 0% plagiarism', NOW(), NOW() + interval '10 days'),
+        (1, 13, 1, 'Submit Progress Report', 'The progress report should be submitted on time detailing work done', NOW(), NOW() + interval '5 day');
