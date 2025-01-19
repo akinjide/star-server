@@ -6,6 +6,7 @@ CREATE TABLE tasks (
     name VARCHAR(100) NOT NULL,
     description TEXT,
     comment TEXT,
+    raw_text TEXT,
     grade SMALLINT,
     assigned_at TIMESTAMP,
     ends_at TIMESTAMP,
